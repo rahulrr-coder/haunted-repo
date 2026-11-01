@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { g } from '../game.svelte.js';
 	import { FACES } from '../art.js';
+	import Static from './Static.svelte';
 
 	let bats = $state([]);
 	onMount(() => {
@@ -24,11 +25,15 @@
 {/key}
 {#if g.scare.on}
 	{#key g.scare.tick}
-		<div class={['fx scarewrap z-20', g.scare.face === 1 && 'v1']}>{@html FACES[g.scare.face]}</div>
+		<div class="fx scarewrap v{g.scare.face} z-20">
+			<div class="scareimg">{@html FACES[g.scare.face]}</div>
+			<Static opacity={0.28} />
+		</div>
 	{/key}
 {/if}
 {#if g.vd.on}
 	<div class={['void', g.vd.red && 'red']}>
 		{#if g.vd.stage !== 'gone'}<div class="vface {g.vd.stage}">{@html FACES[0]}</div>{/if}
+		{#if g.vd.stage === 'snap'}<Static opacity={0.32} />{/if}
 	</div>
 {/if}

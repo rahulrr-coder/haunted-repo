@@ -87,11 +87,78 @@ const MON = {
 export const FIG = ['shape', 'girl', 'bride', 'vampire', 'hand', 'girl'];
 export const monster = (type) => MON[type];
 
-const defs = `<defs><radialGradient id="skin" cx=".5" cy=".42"><stop offset="0" stop-color="#e0dccd"/><stop offset="1" stop-color="#7d786c"/></radialGradient><radialGradient id="mouth" cx=".5" cy=".4"><stop offset="0" stop-color="#3a0408"/><stop offset="1" stop-color="#000"/></radialGradient><filter id="sk"><feTurbulence baseFrequency=".8" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .35 0"/><feComposite in2="SourceGraphic" operator="in"/></filter><filter id="rg"><feGaussianBlur stdDeviation="5"/></filter></defs>`;
-const hair = `<path d="M200 6C80 6 40 130 48 310C52 410 34 470 22 500H150L160 300Z" fill="#030203"/><path d="M200 6C320 6 360 130 352 310C348 410 366 470 378 500H250L240 300Z" fill="#030203"/>`;
-// jump-scare / screamer faces: wet-haired ghost girl (also the screamer), vampire, bride
-export const FACES = [
-	`<svg viewBox="0 0 400 500">${defs}${hair}<ellipse cx="200" cy="232" rx="84" ry="120" fill="url(#skin)"/><ellipse cx="200" cy="232" rx="84" ry="120" fill="#000" filter="url(#sk)"/><ellipse cx="162" cy="206" rx="25" ry="34" fill="#030203"/><ellipse cx="238" cy="206" rx="25" ry="34" fill="#030203"/><circle cx="163" cy="210" r="2.4" fill="#fff"/><circle cx="239" cy="210" r="2.4" fill="#fff"/><path d="M200 238q-7 25 0 40" stroke="#4a463d" stroke-width="3" fill="none" opacity=".5"/><path d="M154 306Q200 282 246 306Q258 392 200 414Q142 392 154 306Z" fill="url(#mouth)"/><path d="M160 316q-5 42 -3 76M242 316q5 42 3 76" stroke="#5a0a10" stroke-width="3" fill="none"/><path d="M168 120q-12 70 -4 140M232 118q12 70 6 138M200 112q2 60 -2 118" stroke="#030203" stroke-width="3.5" fill="none"/></svg>`,
-	`<svg viewBox="0 0 400 500">${defs}<path d="M20 500L90 340Q200 300 310 340L380 500Z" fill="#020102"/><path d="M110 360L150 290L190 380M290 360L250 290L210 380" fill="#07040a"/><ellipse cx="200" cy="215" rx="78" ry="112" fill="#cfd2d4"/><ellipse cx="200" cy="215" rx="78" ry="112" fill="#000" filter="url(#sk)"/><path d="M120 150Q200 50 280 150Q240 112 200 108Q160 112 120 150Z" fill="#020102"/><ellipse cx="164" cy="196" rx="26" ry="20" fill="#05030a"/><ellipse cx="236" cy="196" rx="26" ry="20" fill="#05030a"/><circle cx="164" cy="196" r="12" fill="#ff2222" filter="url(#rg)"/><circle cx="236" cy="196" r="12" fill="#ff2222" filter="url(#rg)"/><circle cx="164" cy="196" r="6" fill="#ffd0d0"/><circle cx="236" cy="196" r="6" fill="#ffd0d0"/><path d="M130 168L188 186M270 168L212 186" stroke="#030203" stroke-width="7"/><path d="M160 290Q200 270 240 290Q250 340 200 350Q150 340 160 290Z" fill="url(#mouth)"/><path d="M172 290l9 52 9 -52zM210 290l9 52 9 -52z" fill="#f4f0e4"/><path d="M186 350q4 40 0 70M224 346q-4 40 2 66" stroke="#6a0a12" stroke-width="4" fill="none"/></svg>`,
-	`<svg viewBox="0 0 400 500">${defs}<path d="M40 500Q30 230 100 110Q200 -20 300 110Q370 230 360 500Z" fill="#d8d4c6" opacity=".4"/><ellipse cx="200" cy="228" rx="80" ry="112" fill="url(#skin)"/><ellipse cx="200" cy="228" rx="80" ry="112" fill="#000" filter="url(#sk)"/><ellipse cx="164" cy="204" rx="22" ry="32" fill="#030203"/><ellipse cx="236" cy="204" rx="22" ry="32" fill="#030203"/><path d="M164 236q-8 60 -2 118M236 236q8 60 2 118" stroke="#5a0a10" stroke-width="4" fill="none"/><path d="M162 304Q200 290 238 304Q248 380 200 398Q152 380 162 304Z" fill="url(#mouth)"/><path d="M60 500L110 360Q200 330 290 360L340 500Z" fill="#c9c5b6" opacity=".45"/></svg>`
-];
+// ---- scare art: dark, desaturated, grainy. Faces are hidden or blurred on purpose; a clean cartoon face reads as a toy. ----
+const faceDefs = `<defs>
+	<radialGradient id="skin" cx=".5" cy=".42"><stop offset="0" stop-color="#c9c5b8"/><stop offset=".7" stop-color="#6d6a62"/><stop offset="1" stop-color="#1c1c1a"/></radialGradient>
+	<radialGradient id="sock" cx=".5" cy=".5"><stop offset="0" stop-color="#000" stop-opacity=".95"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+	<radialGradient id="vg" cx=".5" cy=".5" r=".7"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".95"/></radialGradient>
+	<filter id="grainy"><feTurbulence baseFrequency=".9" numOctaves="2" seed="5" result="n"/><feColorMatrix in="n" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .45 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+	<filter id="soft"><feGaussianBlur stdDeviation="1.1"/></filter>
+	<filter id="soft3"><feGaussianBlur stdDeviation="3"/></filter>
+	<filter id="blurglow"><feGaussianBlur stdDeviation="5"/></filter>
+</defs>`;
+
+// hundreds of individual wet strands, not a flat shape
+function ringGhost() {
+	const r = lcg(11);
+	let hair = '';
+	for (let i = 0; i < 280; i++) {
+		let sx = 200 + (r() - 0.5) * 260; const side = sx < 200 ? -1 : 1;
+		if (Math.abs(sx - 200) < 30) sx = 200 + side * (30 + r() * 24);
+		const ex = sx + side * r() * 80 + (r() - 0.5) * 34;
+		const c1 = sx + side * (30 + r() * 55), c2 = ex + side * (10 + r() * 40);
+		hair += `<path d="M${sx.toFixed(1)} -12C${c1.toFixed(1)} ${(110 + r() * 70).toFixed(0)},${c2.toFixed(1)} ${(290 + r() * 90).toFixed(0)},${ex.toFixed(1)} 520" stroke="#040304" stroke-width="${(1.2 + r() * 3.6).toFixed(1)}" opacity="${(0.55 + r() * 0.45).toFixed(2)}" fill="none" stroke-linecap="round"/>`;
+	}
+	let across = '';
+	for (let i = 0; i < 16; i++) {
+		const sx = 200 + (r() - 0.5) * 70, ex = 200 + (r() - 0.5) * 90;
+		across += `<path d="M${sx.toFixed(1)} -12C${(sx + (r() - 0.5) * 70).toFixed(1)} 150,${(ex + (r() - 0.5) * 70).toFixed(1)} 250,${ex.toFixed(1)} ${(300 + r() * 120).toFixed(0)}" stroke="#040304" stroke-width="${(0.9 + r() * 1.8).toFixed(1)}" opacity=".88" fill="none" stroke-linecap="round"/>`;
+	}
+	return `<svg viewBox="0 0 400 500">${faceDefs}
+	<defs><radialGradient id="back" cx=".5" cy=".45" r=".75"><stop offset="0" stop-color="#8d8d96"/><stop offset=".55" stop-color="#47474f"/><stop offset="1" stop-color="#0e0e12"/></radialGradient></defs>
+	<rect width="400" height="500" fill="url(#back)"/>
+	<ellipse cx="200" cy="255" rx="94" ry="134" fill="url(#skin)"/><ellipse cx="200" cy="255" rx="94" ry="134" fill="#000" filter="url(#grainy)"/>
+	<ellipse cx="206" cy="212" rx="46" ry="32" fill="url(#sock)"/>
+	<g filter="url(#soft)">
+		<ellipse cx="206" cy="212" rx="27" ry="17" fill="#e4dfce"/>
+		<path d="M180 214q10 -9 26 -9M232 214q-10 9 -26 9M184 208l10 4M228 218l-12 -3M190 222l9 -5M226 208l-10 4" stroke="#8c1c1c" stroke-width="1.1" fill="none" opacity=".7"/>
+		<circle cx="207" cy="212" r="10.5" fill="#15100e"/><circle cx="207" cy="212" r="4.2" fill="#000"/><circle cx="203" cy="208" r="1.6" fill="#fff" opacity=".8"/>
+		<path d="M178 206Q206 188 236 207" stroke="#000" stroke-width="5" fill="none" opacity=".75"/>
+	</g>
+	<path d="M178 322Q200 328 224 318" stroke="#1c0b0b" stroke-width="2.2" fill="none"/><path d="M224 318q5 26 1 48" stroke="#4a0a10" stroke-width="2.4" fill="none" opacity=".75"/>
+	${hair}${across}
+	<rect width="400" height="500" fill="url(#vg)"/></svg>`;
+}
+
+// found-footage night vision: something very close, standing in the doorway
+function nightVision() {
+	return `<svg viewBox="0 0 400 500">${faceDefs}
+	<defs><radialGradient id="nvg" cx=".5" cy=".4" r=".8"><stop offset="0" stop-color="#274d2b"/><stop offset="1" stop-color="#040a05"/></radialGradient></defs>
+	<rect width="400" height="500" fill="url(#nvg)"/>
+	<g transform="rotate(-5 200 260)">
+		<g filter="url(#soft)" stroke="#6fbf74" stroke-width="3" opacity=".55"><path d="M10 500Q30 360 140 335L260 335Q370 360 390 500" fill="none"/><ellipse cx="200" cy="190" rx="72" ry="94" fill="none"/></g>
+		<path d="M10 500Q30 360 140 335L260 335Q370 360 390 500Z" fill="#010201"/><rect x="160" y="270" width="80" height="80" fill="#010201"/><ellipse cx="200" cy="190" rx="72" ry="94" fill="#010201"/>
+		<g filter="url(#blurglow)" fill="#f2fff2"><ellipse cx="170" cy="176" rx="11" ry="5"/><ellipse cx="230" cy="176" rx="11" ry="5"/></g>
+		<ellipse cx="170" cy="176" rx="7" ry="2.6" fill="#fff"/><ellipse cx="230" cy="176" rx="7" ry="2.6" fill="#fff"/>
+	</g>
+	<rect width="400" height="500" fill="#000" filter="url(#grainy)" opacity=".5"/>
+	<text x="22" y="44" font-family="VT323, monospace" font-size="28" fill="#a8f0ac" opacity=".9">&#9679; REC 03:07:44</text>
+	<rect width="400" height="500" fill="url(#vg)"/></svg>`;
+}
+
+// pale shape pressed against dark glass, mostly out of focus
+function glass() {
+	return `<svg viewBox="0 0 400 500">${faceDefs}
+	<rect width="400" height="500" fill="#040405"/>
+	<g filter="url(#soft3)" transform="rotate(7 200 262)">
+		<ellipse cx="200" cy="262" rx="108" ry="152" fill="url(#skin)"/>
+		<ellipse cx="160" cy="222" rx="23" ry="36" fill="#000"/><ellipse cx="246" cy="236" rx="19" ry="29" fill="#000"/>
+		<path d="M158 360Q202 348 248 362Q244 386 202 388Q162 386 158 360Z" fill="#000"/>
+	</g>
+	<path d="M96 120v380M150 90v410M260 100v400M312 130v370" stroke="#8aa" stroke-width="1" opacity=".12"/>
+	<rect width="400" height="500" fill="#000" filter="url(#grainy)" opacity=".45"/>
+	<rect width="400" height="500" fill="url(#vg)"/></svg>`;
+}
+
+// 0: hair-curtain ghost with one wide eye (also the screamer), 1: night-vision doorway, 2: face against glass
+export const FACES = [ringGhost(), nightVision(), glass()];
